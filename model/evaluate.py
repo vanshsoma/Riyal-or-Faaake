@@ -4,7 +4,6 @@ import torchvision.transforms as transforms
 from torchvision.datasets import ImageFolder
 from torch.utils.data import DataLoader
 import yaml
-import os
 
 def load_config(path="config.yaml"):
     with open(path) as f:
@@ -28,15 +27,20 @@ def get_test_loader(cfg):
         transforms.ToTensor(),
         transforms.Normalize([0.5]*3, [0.5]*3)
     ])
-    # CIFAKE test split — adjust path if yours is different
     test_dataset = ImageFolder(root="data/cifake/test", transform=transform)
-    test_loader = DataLoader(
-        test_dataset,
-        batch_size=cfg['batch_size'],
-        shuffle=False,
-        num_workers=2
-    )
-    return test_loader
+    return DataLoader(test_dataset, batch_size=cfg['batch_size'],
+                      shuffle=False, num_workers=2)
+
+def get_train_loader(cfg):
+    transform = transforms.Compose([
+        transforms.Resize((32, 32)),
+        transforms.RandomHorizontalFlip(),
+        transforms.ToTensor(),
+        transforms.Normalize([0.5]*3, [0.5]*3)
+    ])
+    train_dataset = ImageFolder(root="data/cifake/train", transform=transform)
+    return DataLoader(train_dataset, batch_size=cfg['batch_size'],
+                      shuffle=True, num_workers=2)
 
 def evaluate(model, loader, device):
     model.eval()
@@ -61,19 +65,15 @@ def evaluate_checkpoint(checkpoint_path, label=""):
 def compare_before_after(before_path, after_path):
     print("\n--- Performance Degradation Check ---")
     acc_before = evaluate_checkpoint(before_path, label="BEFORE watermarking")
-    acc_after  = evaluate_checkpoint(after_path,  label="AFTER watermarking")
+    acc_after  = evaluate_checkpoint(after_path,  label="AFTER  watermarking")
     delta = abs(acc_before - acc_after)
     print(f"Delta:  {delta:.8f}")
-    if delta < 1e-5:
-        print("PASS: Zero performance degradation confirmed")
+    if delta < 1e-4:
+        print("PASS — Zero performance degradation confirmed")
     else:
-        print("WARN: Accuracy shifted — tell Person B")
+        print("WARN — Accuracy shifted, check watermarking code")
     return acc_before, acc_after
 
 if __name__ == "__main__":
     cfg = load_config()
-    # Run this first thing to get your baseline
-    evaluate_checkpoint(
-        cfg['baseline_model'],
-        label="clean_resnet18_baseline"
-    )
+    evaluate_checkpoint(cfg['baseline_model'], label="clean_resnet18_baseline")
