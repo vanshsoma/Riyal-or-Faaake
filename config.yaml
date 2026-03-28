@@ -1,0 +1,39 @@
+# config.yaml
+
+model:
+  architecture: resnet18
+  num_classes: 2
+  pretrained: true
+
+training:
+  epochs: 10
+  batch_size: 128
+  learning_rate: 0.001
+  poison_rate: 0.1
+
+watermark:
+  # Backdoor trigger settings
+  trigger_patch_size: 4
+  trigger_value: 1.0
+  trigger_position: "bottom_right"
+  target_class: 1 # 1 = "FAKE" in CIFAKE
+  trigger_set_size: 100
+
+  # Activation fingerprinting settings
+  fingerprint_set_size: 50
+  fingerprint_layer: "layer2"
+  fingerprint_threshold: 0.92
+
+paths:
+  raw_data: "data/raw/"
+  triggers: "data/triggers/"
+  checkpoints: "model/checkpoints/"
+  certs: "certs/"
+  fingerprint_inputs: "data/fingerprint_inputs/"
+
+verification:
+  confidence_threshold: 0.95
+  min_trigger_accuracy: 0.90
+  # Option 3 — confidence gap metric
+  confidence_gap_threshold: 0.70 # gap between FAKE and REAL softmax scores
+  min_gap_rate: 0.85 # 85% of trigger images must show this gap
