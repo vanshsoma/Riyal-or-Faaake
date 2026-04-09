@@ -273,17 +273,6 @@ python demo/app.py
 
 ---
 
-## Team
-
-| Person | Role |
-|---|---|
-| Person A | White-box verification + finetune attack simulation |
-| Person B | Weight signature embedding + certificate |
-| Person C | Black-box watermarking (trigger + fingerprint + verify) |
-| Person D | Gradio demo |
-
----
-
 ## Limitations
 
 - Binary classification reduces backdoor trigger signal-to-noise
