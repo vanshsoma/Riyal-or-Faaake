@@ -286,17 +286,6 @@ python demo/app.py
 
 ---
 
-## References
-
-- Adi et al. — Turning Your Weakness Into a Strength: Watermarking
-  Deep Neural Networks by Backdooring
-- Lukas et al. — Sok: How Robust is Image Classification Deep
-  Neural Network Watermarking
-- Sablayrolles et al. — Radioactive Data: Tracing Through Training
-- DAWN: Dynamic Adversarial Watermarking of Neural Networks
-
----
-
 <p align="center">
   Built at PS7 Hackathon · 2026<br>
   <i>The model is provably ours.
